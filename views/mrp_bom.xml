@@ -1,0 +1,50 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="mrp_bom_form_view_inherit">
+      <field name="name">mrp_bom_form_view_inherit</field>
+      <field name="model">mrp.bom</field>
+      <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+      <field name="arch" type="xml">
+          <xpath expr="//field[@name='product_tmpl_id']" position="after">
+              <field name="width"/>
+          </xpath>
+          <xpath expr="//field[@name='product_tmpl_id']" position="after">
+              <field name="length"/>
+          </xpath>
+          <xpath expr="//field[@name='product_tmpl_id']" position="after">
+              <field name="area"/>
+          </xpath>
+          <xpath expr="//field[@name='product_tmpl_id']" position="after">
+              <field name="trim"/>
+          </xpath>
+          <xpath expr="//field[@name='product_tmpl_id']" position="after">
+              <field name="number_of_ups"/>
+          </xpath>
+          <xpath expr="//field[@name='type']" position="after">
+              <field name="average_total_weight"/>
+          </xpath>
+          <xpath expr="//field[@name='type']" position="after">
+              <field name="target_output"/>
+          </xpath>
+          <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
+              <field name="micron" />
+          </xpath>
+          <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
+              <field name="density" />
+          </xpath>
+          <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
+              <field name="coverage" />
+          </xpath>
+          <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
+              <field name="gsm" />
+          </xpath>
+          <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
+              <field name="average_final_weight" />
+          </xpath>
+          <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
+              <field name="average_final_content" />
+          </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>
