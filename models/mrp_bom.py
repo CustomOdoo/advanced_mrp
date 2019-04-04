@@ -19,7 +19,8 @@ class MrpBom(models.Model):
     @api.onchange('product_qty')
     @api.depends('product_qty')
     def compute_target_output(self):
-        self.target_output = self.product_qty
+        for record in self:
+            record.target_output = record.product_qty
     
     @api.onchange('width', 'length')
     @api.depends('width', 'length')
