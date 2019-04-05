@@ -5,11 +5,11 @@ from odoo import models, fields, api
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
-    width = fields.Float('Width')
-    length = fields.Float('Length')
-    area = fields.Float('Area', compute='compute_area', readonly=True, store=True)
-    trim = fields.Float('Trim')
-    number_of_ups = fields.Integer('Number of Ups (width)')
+    width = fields.Float('Width (mm)')
+    length = fields.Float('Length (mm)')
+    area = fields.Float('Area (mm)', compute='compute_area', readonly=True, store=True)
+    trim = fields.Float('Trim (mm)')
+    number_of_ups = fields.Integer('Number of Ups (width)', default=1)
     product_qty = fields.Float('Target Output')
     average_total_weight = fields.Float(string='Average Total Weight (grm/pc)', 
         compute='compute_average_total_weight', readonly=True, store=True)
