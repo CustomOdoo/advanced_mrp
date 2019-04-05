@@ -70,27 +70,32 @@ class MrpBomLine(models.Model):
     def compute_average_final_content(self):
         for record in self:
             if record.average_final_weight and record.average_total_weight:
-                record.average_final_content = (record.average_final_weight / 
-                    record.average_total_weight) * record.bom_id.target_output
+                if record.product_tmpl_id.raw_material_category == 'plain' or 'laminate1':
+                    record.average_final_content = (record.average_final_weight / 
+                        record.average_total_weight) * record.bom_id.target_output
+                elif record.product_tmpl_id.raw_material_category == 'ink':
+                    record.average_final_content = ((record.average_final_weight / record.bom_id.width) * 
+                        ((record.bom_id.width * record.bom_id.number_of_ups) + record.bom_id.trim) / 
+                        (record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output)
+                elif record.product_tmpl_id.raw_material_category == 'adhessive' or record.product_tmpl_id.raw_material_category == 'laminate2':
+                    record.average_final_content = record.total_kgs_required
 
     @api.onchange('average_final_weight', 'bom_id.width', 'bom_id.number_of_ups', 'average_total_weight', 'bom_id.target_output')
     @api.depends('average_final_weight', 'bom_id.width', 'bom_id.number_of_ups', 'average_total_weight', 'bom_id.target_output')
     def compute_total_kgs_required(self):
         for record in self:
             if record.average_total_weight and record.bom_id.number_of_ups:
-                record.total_kgs_required = ((record.average_final_weight / record.bom_id.width) * 
-                    ((record.bom_id.width * record.bom_id.number_of_ups) + record.bom_id.trim) / 
-                    (record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output) + 15
-    
-    # @api.onchange('average_final_weight', 'bom_id.width', 'bom_id.number_of_ups', 'average_total_weight', 'bom_id.target_output')
-    # @api.depends('average_final_weight', 'bom_id.width', 'bom_id.number_of_ups', 'average_total_weight', 'bom_id.target_output')
-    # def compute_total_kgs_required(self):
-    #     for record in self:
-    #         print("Im hereeeeeeeeee", record.sequence)
-    #         if record.average_total_weight and record.bom_id.number_of_ups:
-    #             print("Record id", record.id, "Ids 0", self.ids[0])
-    #             if record.id == self.ids[0]:
-    #                 print("####", record.id)
-    #                 record.total_kgs_required = ((((record.average_final_weight / record.bom_id.width) * 
-    #                     ((record.bom_id.width * record.bom_id.number_of_ups) + 20)) / 
-    #                     record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output) + 15
+                if record.product_tmpl_id.raw_material_category == 'plain':
+                    record.total_kgs_required = ((record.average_final_weight / record.bom_id.width) * 
+                        ((record.bom_id.width * record.bom_id.number_of_ups) + record.bom_id.trim) / 
+                        (record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output) + 15
+                elif record.product_tmpl_id.raw_material_category == 'laminate1' or record.product_tmpl_id.raw_material_category == 'laminate2':
+                    record.total_kgs_required = ((record.average_final_weight / record.bom_id.width) * 
+                        ((record.bom_id.width * record.bom_id.number_of_ups) + record.bom_id.trim) / 
+                        (record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output)
+                elif record.product_tmpl_id.raw_material_category == 'ink':
+                    record.total_kgs_required = record.average_final_content / 0.3
+                elif record.product_tmpl_id.raw_material_category == 'adhessive':
+                    record.total_kgs_required = ((record.average_final_weight / record.bom_id.width) * 
+                        ((record.bom_id.width * record.bom_id.number_of_ups) + 10) / 
+                        (record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output)
