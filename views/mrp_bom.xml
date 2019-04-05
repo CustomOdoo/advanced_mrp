@@ -44,6 +44,9 @@
           <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
               <field name="average_final_content" />
           </xpath>
+          <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
+              <field name="total_kgs_required" />
+          </xpath>
       </field>
     </record>
   </data>

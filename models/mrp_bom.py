@@ -32,7 +32,6 @@ class MrpBom(models.Model):
     @api.depends('bom_line_ids')
     def compute_average_total_weight(self):
         for record in self:
-            print("############", "AV Total Weight", sum(record.mapped('bom_line_ids.average_final_weight')))
             record.average_total_weight = sum(record.mapped('bom_line_ids.average_final_weight'))
 
 class MrpBomLine(models.Model):
@@ -49,7 +48,9 @@ class MrpBomLine(models.Model):
         related='bom_id.average_total_weight', readonly=True)
     average_final_content = fields.Float('Average Dry/Final Content',
         compute='compute_average_final_content', readonly=True)
-    total_kgs_required = fields.Float('Total Kgs Reqired', readonly=True)
+    total_kgs_required = fields.Float('Total Kgs Reqired',
+        compute='compute_total_kgs_required', readonly=True, store=True)
+    product_qty = fields.Float(related='total_kgs_required', store=True)
 
     @api.onchange('micron')
     @api.depends('micron', 'density', 'coverage')
@@ -62,11 +63,34 @@ class MrpBomLine(models.Model):
     def compute_average_final_weight(self):
         for record in self:
             record.average_final_weight = (record.bom_id.area * record.micron * 
-                record.product_tmpl_id.density * record.coverage) / 1000000
+                record.product_tmpl_id.density * (record.coverage / 100)) / 1000000
 
     @api.onchange('average_final_weight', 'average_total_weight', 'bom_id.target_output')
     @api.depends('average_final_weight', 'bom_id.target_output', 'average_total_weight')
     def compute_average_final_content(self):
         for record in self:
             if record.average_final_weight and record.average_total_weight:
-                record.average_final_content = (record.average_final_weight / record.average_total_weight) * record.bom_id.target_output
+                record.average_final_content = (record.average_final_weight / 
+                    record.average_total_weight) * record.bom_id.target_output
+
+    @api.onchange('average_final_weight', 'bom_id.width', 'bom_id.number_of_ups', 'average_total_weight', 'bom_id.target_output')
+    @api.depends('average_final_weight', 'bom_id.width', 'bom_id.number_of_ups', 'average_total_weight', 'bom_id.target_output')
+    def compute_total_kgs_required(self):
+        for record in self:
+            if record.average_total_weight and record.bom_id.number_of_ups:
+                record.total_kgs_required = ((record.average_final_weight / record.bom_id.width) * 
+                    ((record.bom_id.width * record.bom_id.number_of_ups) + record.bom_id.trim) / 
+                    (record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output) + 15
+    
+    # @api.onchange('average_final_weight', 'bom_id.width', 'bom_id.number_of_ups', 'average_total_weight', 'bom_id.target_output')
+    # @api.depends('average_final_weight', 'bom_id.width', 'bom_id.number_of_ups', 'average_total_weight', 'bom_id.target_output')
+    # def compute_total_kgs_required(self):
+    #     for record in self:
+    #         print("Im hereeeeeeeeee", record.sequence)
+    #         if record.average_total_weight and record.bom_id.number_of_ups:
+    #             print("Record id", record.id, "Ids 0", self.ids[0])
+    #             if record.id == self.ids[0]:
+    #                 print("####", record.id)
+    #                 record.total_kgs_required = ((((record.average_final_weight / record.bom_id.width) * 
+    #                     ((record.bom_id.width * record.bom_id.number_of_ups) + 20)) / 
+    #                     record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output) + 15
