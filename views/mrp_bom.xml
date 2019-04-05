@@ -8,20 +8,20 @@
           <xpath expr="//field[@name='product_tmpl_id']" position="after">
               <field name="width"/>
           </xpath>
-          <xpath expr="//field[@name='product_tmpl_id']" position="after">
+          <xpath expr="//field[@name='width']" position="after">
               <field name="length"/>
           </xpath>
-          <xpath expr="//field[@name='product_tmpl_id']" position="after">
-              <field name="area"/>
-          </xpath>
-          <xpath expr="//field[@name='product_tmpl_id']" position="after">
+          <xpath expr="//field[@name='width']" position="after">
               <field name="trim"/>
           </xpath>
-          <xpath expr="//field[@name='product_tmpl_id']" position="after">
+          <xpath expr="//field[@name='length']" position="after">
               <field name="number_of_ups"/>
           </xpath>
           <xpath expr="//field[@name='type']" position="after">
               <field name="average_total_weight"/>
+          </xpath>
+          <xpath expr="//field[@name='type']" position="after">
+              <field name="area"/>
           </xpath>
           <xpath expr="//field[@name='type']" position="after">
               <field name="target_output"/>
