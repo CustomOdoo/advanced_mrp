@@ -94,15 +94,15 @@ class MrpBomLine(models.Model):
                     record.total_kgs_required = ((record.average_final_weight / record.bom_id.width) * 
                         ((record.bom_id.width * record.bom_id.number_of_ups) + record.bom_id.trim) / 
                         (record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output)
+                elif record.product_tmpl_id.raw_material_category == 'ink':
+                    record.total_kgs_required = ((record.average_final_weight / record.bom_id.width) * 
+                        ((record.bom_id.width * record.bom_id.number_of_ups) + record.bom_id.trim) / 
+                        (record.average_total_weight * record.bom_id.number_of_ups)) * record.bom_id.target_output / 0.3
                 elif record.product_tmpl_id.raw_material_category == 'adhessive':
                     record.total_kgs_required = ((record.average_final_weight / record.bom_id.width) * 
                         ((record.bom_id.width * record.bom_id.number_of_ups) + 10) / 
                         (record.average_total_weight * record.bom_id.number_of_ups) * record.bom_id.target_output)
                     record.average_final_content = record.total_kgs_required
-                elif record.product_tmpl_id.raw_material_category == 'ink':
-                    record.total_kgs_required = ((record.average_final_weight / record.bom_id.width) * 
-                        ((record.bom_id.width * record.bom_id.number_of_ups) + record.bom_id.trim) / 
-                        (record.average_total_weight * record.bom_id.number_of_ups)) * record.bom_id.target_output / 0.3
 
     @api.onchange('average_final_weight', 'average_total_weight', 'sequence')
     @api.depends('average_final_weight', 'bom_id.target_output', 'average_total_weight')
