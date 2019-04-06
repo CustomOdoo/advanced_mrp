@@ -18,9 +18,6 @@
               <field name="number_of_ups"/>
           </xpath>
           <xpath expr="//field[@name='type']" position="after">
-              <field name="average_total_weight"/>
-          </xpath>
-          <xpath expr="//field[@name='type']" position="after">
               <field name="area"/>
           </xpath>
           <xpath expr="//field[@name='type']" position="after">
@@ -49,6 +46,24 @@
           </xpath>
           <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="attributes">
               <attribute name="invisible">True</attribute>
+          </xpath>
+          <xpath expr="////field[@name='bom_line_ids']" position="after">
+            <group class="oe_subtotal_footer oe_right" colspan="2" name="weight_total">
+              <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                <label for="average_total_weight"/>
+              </div>
+              <field name="average_total_weight" nolabel="1" class="oe_subtotal_footer_separator" />
+              
+              <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                <label for="average_yield"/>
+              </div>
+              <field name="average_yield" nolabel="1" class="oe_subtotal_footer_separator" />
+              
+              <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                <label for="expected_pcs_per_target_putput"/>
+              </div>
+              <field name="expected_pcs_per_target_putput" nolabel="1" class="oe_subtotal_footer_separator" />
+            </group>
           </xpath>
       </field>
     </record>
